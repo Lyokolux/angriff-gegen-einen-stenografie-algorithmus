@@ -30,7 +30,7 @@ Nex times, `source venv/bin/activate` will do the job.
 
 >D.h. das Alphabet wird in einer beliebigen Permutation angegeben, beispielsweise
 ```
-Key: abcdefghijklmnopqrstuvwxyzäöü
+Key abcdefghijklmnopqrstuvwxyzäöü
     geiqouxdyväzfwlnhtbjpasmkörcü
 ```
 >Der Text "Das ist ein Test." wird dann substituiert durch "Qgb ybj oyw Jobj."
