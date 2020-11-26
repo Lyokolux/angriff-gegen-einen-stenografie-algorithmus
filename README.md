@@ -3,7 +3,7 @@
 Check that venv is installed.  
 Then create a venv : `python3 -m venv venv`  
 activate it : `source venv/bin/activate` (`venv\Scripts\activate.bat` on Windows)  
-and install dependancies : `python -m pip install -r requirements.txt`
+and install dependencies : `python -m pip install -r requirements.txt`
 
 You are ready to go !
 
