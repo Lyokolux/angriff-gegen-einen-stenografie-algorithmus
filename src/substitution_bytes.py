@@ -14,7 +14,7 @@ def encryptMessage(message: bytearray, key: List[int]) -> List[int]:
 
 
 def encrypted_to_string(message: List[int]):
-    return ''.join([chr(x) for x in encrypted_message])
+    return ''.join((chr(x) for x in encrypted_message))
 
 
 if __name__ == "__main__":
