@@ -3,17 +3,15 @@ from typing import MutableMapping, Mapping
 import string
 
 NORMALIZE_TABLE: MutableMapping[str, str] = {
-    'ä': 'ae',
-    'ü': 'ue',
-    'ö': 'oe',
-    'ß': 'ss'
+    'ß': 'ss',
+    ''
 }
 # Add the punctuation (translated to an empty string)
 NORMALIZE_TABLE.update({el: '' for el in string.punctuation})
 
 
 def createAlphabet():
-    return list(string.ascii_uppercase)
+    return list(string.ascii_uppercase + 'ÄÜÖß')
 
 
 def generateKey():
@@ -33,7 +31,7 @@ def cryptText(text, encryptTable: Mapping[str, str]):
 if __name__ == "__main__":
     key = generateKey()
     encryptionTable = {k: v for (k, v) in zip(createAlphabet(), key)}
-    textToEncrypt = "ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜß abcdefghijklmopqrstuvwxyzäöüß"
+    textToEncrypt = "ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜß abcdefghijklmopqrstuvwxyzäöüß $%&/.:,"
     textToEncrypt = normalizeMessage(textToEncrypt)
     cryptedText = cryptText(normalizeMessage(textToEncrypt), encryptionTable)
-    print(cryptedText)
+    print('\n'.join(cryptedText.split(' ')))
