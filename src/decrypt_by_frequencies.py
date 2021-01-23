@@ -1,5 +1,6 @@
 import operator
 import string
+from collections import defaultdict
 from frequencies import GERMAN_LETTER_FREQUENCIES, SORTED_BY_FREQUENCIES
 
 LETTERS = SORTED_BY_FREQUENCIES
@@ -34,9 +35,35 @@ def decryptMessageByFreq(message, letterCountValue, baseFrequency):
             letter, letterInFreq.lower())
     return normalizeMessage(message)
 
+# ===============================================
+# Try to break the encrytption without the key
+# ===============================================
+
+
+def positions_sorted_by_frequencies(positions: bytearray):
+    d = defaultdict(lambda: 0)
+
+    # Count the position occurences
+    for pos in positions:
+        d[pos] += 1
+
+    # Calculate the frequence for each position
+    totalPositions = len(positions)
+    for pos in d:
+        d[pos] = round(d[pos] * 100 / totalPositions, 4)
+
+    # Sort by frequency
+    d = {k: v for (k, v) in sorted(
+        d.items(), key=operator.itemgetter(1), reverse=True)}
+
+    return d
+
 
 if __name__ == "__main__":
-    mockedText = '\n'.join([letter * int(occurance*100) for (letter,
-                                                             occurance) in GERMAN_LETTER_FREQUENCIES.items()])
-    r = main(mockedText)
-    # print(r)
+    from implementierung import encrypt
+    from image import Image
+
+    key = Image('./src/assets/26_nuances_de_grey.png')
+    msg = "helloworld"
+
+    encrypted = encrypt(key, msg)
