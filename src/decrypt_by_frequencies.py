@@ -3,7 +3,8 @@ import string
 from collections import defaultdict
 from frequencies import GERMAN_LETTER_FREQUENCIES, SORTED_BY_FREQUENCIES
 
-LETTERS = SORTED_BY_FREQUENCIES
+LETTER_IN_ALPHABET = 26
+SORTED_LETTERS = SORTED_BY_FREQUENCIES
 
 
 def main(message: str) -> None:
@@ -22,8 +23,8 @@ def normalizeMessage(message):
 
 
 def getLetterCount(message, reverse=False):
-    global LETTERS
-    letterCount = {letter: 0.0 for letter in LETTERS}
+    global SORTED_LETTERS
+    letterCount = {letter: 0.0 for letter in SORTED_LETTERS}
     for letter in letterCount.keys():
         letterCount[letter] = message.count(letter)
     return sorted(letterCount.items(), key=operator.itemgetter(1), reverse=not(reverse))
@@ -59,11 +60,42 @@ def positions_sorted_by_frequencies(positions: bytearray):
     return d
 
 
+def decrypt_by_frequencies(msg: bytearray):
+    global LETTER_IN_ALPHABET, SORTED_LETTERS
+
+    msg_length = len(msg)
+    positions_sorted_to_freq = positions_sorted_by_frequencies(msg)
+    positions_sorted = list(positions_sorted_to_freq.keys())
+
+    (position_per_letter, position_left) = divmod(
+        len(positions_sorted), LETTER_IN_ALPHABET)
+
+    decrypted_msg = [None] * msg_length
+    for (i, letter) in enumerate(SORTED_LETTERS):
+        for j in range(position_per_letter + (1 if position_left > 0 else 0)):
+            index = i * position_per_letter + j
+            # Guard to avoid list index out of range
+            if(index >= len(positions_sorted)):
+                break
+            position = positions_sorted[index]
+            matching_indexes = (
+                pos for (pos, el) in enumerate(msg) if el == position)
+            for matching_index in matching_indexes:
+                decrypted_msg[matching_index] = letter
+
+        position_left -= 1
+
+    return decrypted_msg
+
+
 if __name__ == "__main__":
     from implementierung import encrypt
     from image import Image
 
     key = Image('./src/assets/26_nuances_de_grey.png')
-    msg = "helloworld"
+    msg = "abcdefghijklmnopqrstuvwxyz"
 
     encrypted = encrypt(key, msg)
+    print(encrypted)
+    decrypted = decrypt_by_frequencies(encrypted)
+    print(decrypted)
