@@ -12,7 +12,7 @@ def encrypt(imageAsKey: Image, message: str) -> bytearray:
     global DIGIT_IN_BYTE
     def convertToBinary(x): return format(x, 'b').zfill(DIGIT_IN_BYTE)
 
-    encryption_table = imageAsKey.colorsMap
+    encryption_table = imageAsKey.getEncryptionTable()
     message_as_ascii = [ord(c) for c in message]
     encrypted_as_position = [choice(encryption_table[c])
                              for c in message_as_ascii]
@@ -22,8 +22,7 @@ def encrypt(imageAsKey: Image, message: str) -> bytearray:
 def decrypt(imageAsKey: Image, encrypted: bytearray):
     global DIGIT_IN_BYTE
     character_in_message = len(encrypted) / DIGIT_IN_BYTE
-    decryption_table = {position: code for code,
-                        positions in imageAsKey.colorsMap.items() for position in positions}
+    decryption_table = imageAsKey.getDecryptionTable()
 
     return ''.join([chr(decryption_table[x]) for x in encrypted])
 

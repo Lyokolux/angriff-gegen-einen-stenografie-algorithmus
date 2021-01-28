@@ -33,6 +33,13 @@ class Image:
         coords = self.getCoordsFromPosition(position)
         return self.getPixelAtCoord(coords)[0]
 
+    def getEncryptionTable(self):
+        return self.colorsMap
+
+    def getDecryptionTable(self):
+        return {position: code for code,
+                positions in self.colorsMap.items() for position in positions}
+
     def _getColorsMap(self):
         colorMap = defaultdict(lambda: [])
         for position in range(self.width * self.height):

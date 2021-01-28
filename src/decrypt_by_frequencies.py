@@ -98,4 +98,4 @@ if __name__ == "__main__":
     encrypted = encrypt(key, msg)
     print(encrypted)
     decrypted = decrypt_by_frequencies(encrypted)
-    print(decrypted)
+    print(''.join(decrypted))
