@@ -2,21 +2,11 @@ from typing import Iterable
 from random import choice
 from image import Image
 
-DIGIT_IN_BYTE = 8
 
-# TODO: may ne faster with generator instead of list comprehension
-
-# Use the bytearray as underlying low-level interface
-
-
-def encrypt(imageAsKey: Image, message: str) -> bytearray:
-    global DIGIT_IN_BYTE
-    def convertToBinary(x): return format(x, 'b').zfill(DIGIT_IN_BYTE)
-
+def encrypt(imageAsKey: Image, message: str) -> Iterable[int]:
     encryption_table = imageAsKey.getEncryptionTable()
-    encrypted_as_position = [choice(encryption_table[ord(c)])
-                             for c in message]
-    return encrypted_as_position
+    return [choice(encryption_table[ord(c)])
+            for c in message]
 
 
 def decrypt(imageAsKey: Image, encrypted: Iterable[int]) -> str:
