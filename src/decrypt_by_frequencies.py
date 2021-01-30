@@ -1,5 +1,6 @@
 import operator
 import string
+from typing import Iterable
 from collections import defaultdict
 from frequencies import GERMAN_LETTER_FREQUENCIES, SORTED_BY_FREQUENCIES
 
@@ -41,7 +42,7 @@ def decryptMessageByFreq(message, letterCountValue, baseFrequency):
 # ===============================================
 
 
-def positions_sorted_by_frequencies(positions: bytearray):
+def positions_sorted_by_frequencies(positions: Iterable[int]):
     d = defaultdict(lambda: 0)
 
     # Count the position occurences
@@ -60,8 +61,8 @@ def positions_sorted_by_frequencies(positions: bytearray):
     return d
 
 
-def decrypt_by_frequencies(msg: bytearray):
-    global LETTER_IN_ALPHABET, SORTED_LETTERS
+def decrypt_by_frequencies(msg: Iterable[int], frequencies=SORTED_LETTERS) -> str:
+    global LETTER_IN_ALPHABET
 
     msg_length = len(msg)
     positions_sorted_to_freq = positions_sorted_by_frequencies(msg)
@@ -69,6 +70,8 @@ def decrypt_by_frequencies(msg: bytearray):
 
     (position_per_letter, position_left) = divmod(
         len(positions_sorted), LETTER_IN_ALPHABET)
+    # in case the message < len(ALPHABET)
+    position_per_letter = max(position_per_letter, 1)
 
     decrypted_msg = [None] * msg_length
     for (i, letter) in enumerate(SORTED_LETTERS):
@@ -84,8 +87,8 @@ def decrypt_by_frequencies(msg: bytearray):
                 decrypted_msg[matching_index] = letter
 
         position_left -= 1
-
-    return decrypted_msg
+    print(decrypted_msg)
+    return ''.join(decrypted_msg)
 
 
 if __name__ == "__main__":
