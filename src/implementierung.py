@@ -1,6 +1,6 @@
+from typing import Iterable
+from random import choice
 from image import Image
-import json
-from random import choice  # TODO: find one random enough for cryptographic usage
 
 DIGIT_IN_BYTE = 8
 
@@ -14,18 +14,14 @@ def encrypt(imageAsKey: Image, message: str) -> bytearray:
     def convertToBinary(x): return format(x, 'b').zfill(DIGIT_IN_BYTE)
 
     encryption_table = imageAsKey.getEncryptionTable()
-    message_as_ascii = [ord(c) for c in message]
-    encrypted_as_position = [choice(encryption_table[c])
-                             for c in message_as_ascii]
-    return bytearray(encrypted_as_position)
+    encrypted_as_position = [choice(encryption_table[ord(c)])
+                             for c in message]
+    return encrypted_as_position
 
 
-def decrypt(imageAsKey: Image, encrypted: bytearray) -> str:
-    global DIGIT_IN_BYTE
-    character_in_message = len(encrypted) / DIGIT_IN_BYTE
+def decrypt(imageAsKey: Image, encrypted: Iterable[int]) -> str:
     decryption_table = imageAsKey.getDecryptionTable()
-
-    return ''.join([chr(decryption_table[x]) for x in encrypted])
+    return ''.join((chr(decryption_table[x]) for x in encrypted))
 
 
 def score(imageAsKey: Image, original: str, decrypted: str):
@@ -33,7 +29,7 @@ def score(imageAsKey: Image, original: str, decrypted: str):
 
 
 if __name__ == "__main__":
-    imagePath = 'src/assets/26_nuances_de_grey.png'
+    imagePath = 'src/assets/cover_image_coin.png'
     msg = 'helloworld'
     key = Image(imagePath)
     encrypted = encrypt(key, msg)
