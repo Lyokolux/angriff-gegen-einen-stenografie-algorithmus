@@ -1,6 +1,7 @@
 from timeit import Timer
 
-file_src = 'src/assets/1mB.txt'
+UNIT = 'mB'
+file_src = f'src/assets/1{UNIT}.txt'
 image_src = 'src/assets/cover_image_coin.png'
 repetition = 100
 
@@ -15,4 +16,6 @@ fileSize = len(open(file_src).read())
 list_comprehension_creation_time = Timer(
     stmt=f"[c for c in range({fileSize})]").timeit(number=repetition)
 
-print((t - list_comprehension_creation_time) / repetition)
+second_for_one_run = (t - list_comprehension_creation_time) / repetition
+throughput = 1 / second_for_one_run
+print(f"Throughput of {throughput:.4f} {UNIT}/s")
