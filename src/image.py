@@ -22,7 +22,6 @@ class Image:
 
     def getCoordsFromPosition(self, position):
         (x, y) = divmod(position, self.height)
-        # To justify in the Handout
         return (x, y)
 
     def getPositionFromCoords(self, coords):
