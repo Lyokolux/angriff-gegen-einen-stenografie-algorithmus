@@ -6,10 +6,11 @@ repetition = 100
 
 t = Timer(stmt="[choice(encryption_table[c]) for c in msg]",
           setup=f"from image import Image; from random import choice; content = open('{file_src}').read(); msg = [ord(c) for c in content]; encryption_table = Image('{image_src}').getEncryptionTable();"
-          )
+          ).timeit(number=repetition)
 
 
 fileSize = len(open(file_src).read())
-t2 = Timer(stmt=f"[c for c in range({fileSize})]")
+list_comprehension_creation_time = Timer(
+    stmt=f"[c for c in range({fileSize})]").timeit(number=repetition)
 
-print((t.timeit(number=repetition) - t2.timeit(number=repetition)) / repetition)
+print((t - list_comprehension_creation_time) / repetition)
