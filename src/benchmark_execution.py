@@ -1,7 +1,7 @@
 from timeit import Timer
 
 IMAGE_SRC = 'src/assets/cover_image_coin.png'
-REPETITION = 10
+REPETITION = 100
 UNIT = 'kB'
 
 LOADS_IN_KB = [98, 118, 200, 494, 642, 1388, 1798, 1926, 10690, 14620]
@@ -16,10 +16,7 @@ def run_load(load):
                  setup=f"from implementierung import encrypt; from image import Image;"
                  ).timeit(number=REPETITION)
 
-    list_comprehension_creation_time = Timer(
-        stmt=f"[c for c in range({load})]").timeit(number=REPETITION)
-
-    execution_time = (time-list_comprehension_creation_time) / REPETITION
+    execution_time = time / REPETITION
     print(f"Execution for {load}{UNIT} took {execution_time:.4f} seconds")
 
 
