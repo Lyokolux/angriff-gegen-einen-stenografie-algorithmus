@@ -11,7 +11,6 @@ SORTED_LETTERS = SORTED_BY_FREQUENCIES
 def main(message: str) -> None:
     global SORTED_BY_FREQUENCIES
     textToDecrypt = normalizeMessage(message)
-    print(textToDecrypt)
     letterCount = getLetterCount(textToDecrypt)
     decryptMessage = decryptMessageByFreq(
         textToDecrypt, letterCount, SORTED_BY_FREQUENCIES)
@@ -83,11 +82,13 @@ def decrypt_by_frequencies(msg: Iterable[int], frequencies=SORTED_LETTERS) -> st
             position = positions_sorted[index]
             matching_indexes = (
                 pos for (pos, el) in enumerate(msg) if el == position)
+
             for matching_index in matching_indexes:
                 decrypted_msg[matching_index] = letter
 
         position_left -= 1
-    print(decrypted_msg)
+    # TODO: fix why some element can be None
+    decrypted_msg = [el if el != None else '-' for el in decrypted_msg]
     return ''.join(decrypted_msg)
 
 
