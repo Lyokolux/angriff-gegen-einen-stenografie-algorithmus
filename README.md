@@ -1,22 +1,11 @@
 
 ## Install and use (DEV)
-Check that venv is installed.  
+Check that venv is installed on your machine.  
 Then create a venv : `python3 -m venv venv`  
 activate it : `source venv/bin/activate` (`venv\Scripts\activate.bat` on Windows)  
 and install dependencies : `python -m pip install -r requirements.txt`
 
-You are ready to go !
-
 Nex times, `source venv/bin/activate` will do the job.
-
-## TODO
-
-* [x] Encrypt a message
-* [x] Decrypt a message
-* [ ] Decrypt a message by frequencies
-  * [ ] Improvement: with a german dictionary to decrypt the words in addition 
-* [ ] Perf: Use array instead of dictionnary
-* [ ] 
 
 ## Goals (de)
 
