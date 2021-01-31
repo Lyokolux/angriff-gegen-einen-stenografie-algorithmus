@@ -1,6 +1,10 @@
 import json
 import re
 import uuid
+import sys
+import os
+import csv
+import operator
 from collections import defaultdict
 from faker import Faker
 from implementierung import encryptWithTable, score_it
@@ -23,19 +27,17 @@ def normalizeMessage(msg: str):
 #
 
 
-fake = Faker()
-
-with open('src/assets/encryptionTable.json') as f:
-    encryptionTables = json.loads(f.read())
-
-
 def main(try_number):
+    fake = Faker()
+    with open('src/assets/encryptionTable.json') as f:
+        encryptionTables = json.loads(f.read())
     results = defaultdict(lambda: defaultdict(lambda: []))
+
     for maxTextLength in range(500, 1000):
-        # print(textLength + textLength * 0.2 // 1, end='# ')
         msg = normalizeMessage(
             fake.text(max_nb_chars=maxTextLength))
         textLength = len(msg)
+
         for (position_per_letter, table) in enumerate(encryptionTables, 1):
             encrypted = encryptWithTable(table, msg)
             decrypted = decrypt_by_frequencies(
@@ -44,14 +46,49 @@ def main(try_number):
             score = score_it(msg, decrypted)
             results[textLength][position_per_letter].append(score)
 
-        print(try_number, maxTextLength)
     return results
 
 
-if __name__ == "__main__":
-    for count in range(10):
-        results = main(count)
+def reduce_results(path):
+    SUMMARY_FILE = 'summary'
+    summary = defaultdict(lambda: defaultdict(lambda: []))
 
-        with open('src/angriff-results/' + str(uuid.uuid4()), 'w') as f:
-            f.write(json.dumps(results))
-        print('\n' + str(count))
+    # Read and populate
+    for (i, result_file) in enumerate(os.listdir(path), 1):
+        # Read file
+        with open(os.path.join(path, result_file)) as f:
+            content = json.loads(f.read())
+
+        # Populate summary
+        for (msgSize, positions) in content.items():
+            for (amountOfPosition, scores) in positions.items():
+                summary[msgSize][amountOfPosition].extend(scores)
+
+    # Reduce summary
+    summary = dict(summary)
+    for (msgSize, positions) in summary.items():
+        summary[msgSize] = dict(summary[msgSize])
+        for (amountOfPosition, scores) in positions.items():
+            summary[msgSize][amountOfPosition] = int(sum(scores) / len(scores))
+
+    with open('src/results.csv', 'w', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow(['Text Length', *list(summary.values())[0].keys()])
+        for (msgSize, positionsWithScore) in sorted(summary.items(), key=lambda item: int(item[0])):
+            writer.writerow([msgSize, *summary[msgSize].values()])
+
+
+if __name__ == "__main__":
+    DIR_PATH = 'src/angriff-results'
+    argument = sys.argv[-1]
+
+    if argument == 'generate':
+        for count in range(10):
+            results = main(count)
+
+            with open(DIR_PATH + str(uuid.uuid4()), 'w') as f:
+                f.write(json.dumps(results))
+    elif argument == 'reduce':
+        reduce_results(DIR_PATH)
+    else:
+        print("Argument unkown or inexistant")
