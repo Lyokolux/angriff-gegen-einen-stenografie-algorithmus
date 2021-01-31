@@ -9,15 +9,6 @@ You are ready to go !
 
 Nex times, `source venv/bin/activate` will do the job.
 
-## TODO
-
-* [x] Encrypt a message
-* [x] Decrypt a message
-* [ ] Decrypt a message by frequencies
-  * [ ] Improvement: with a german dictionary to decrypt the words in addition 
-* [ ] Perf: Use array instead of dictionnary
-* [ ] 
-
 ## Goals (de)
 
 * Verschlüsseln/entschlüsseln
